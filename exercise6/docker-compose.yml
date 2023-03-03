@@ -1,0 +1,41 @@
+version: "3.7"
+
+
+volumes:
+  mysql-data:
+    external: true
+
+services:
+  mysqldb:
+    image: mysql:8.0.32-debian
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "my_data"
+  
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    ports:
+      - "8081:80"
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+    links:
+      - "mysqldb:db"
+
+  myjavaapp:
+    image: myapp
+    ports:
+      - "8080:8080"
+    environment:
+      DB_NAME: "my_data"
+      DB_USER: "${MYSQL_USER}"
+      DB_PWD: "${MYSQL_PASSWORD}"
+      DB_SERVER: "mysqldb"
+    depends_on:
+      - mysqldb
