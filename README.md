@@ -62,8 +62,8 @@ Then login to nexus and push the image:
 
 ```
 docker login http://<droplet-ip>:<nexus-port>
-docker tag my-java-app:1.0.0 http://<droplet-ip>:<nexus-port>/my-java-app:1.0.0
-docker push http://<droplet-ip>:<nexus-port>/my-java-app:1.0.0
+docker tag my-java-app:1.0.0 <droplet-ip>:<nexus-port>/my-java-app:1.0.0
+docker push <droplet-ip>:<nexus-port>/my-java-app:1.0.0
 ```
 
 ## Exercise 6 - add java app to docker compose file
@@ -73,4 +73,23 @@ Start all three containers:
 ```
 cd exercise6
 docker-compose up -d
-``
+```
+
+## Exercise 7 - docker-compose on server
+Create droplet with: [script](create_droplet.sh). This creates a droplet starts the [entrypoint.sh](entrypoint.sh) script to while creation and includes it to the respective firewall (for external access).
+add the nexus repo as insecure registry to docker daemon.
+Adjust the index.html file (const HOST = <droplet-ip>), build the new jar file and push it to nexus.
+Adjust the new image version within the docker-compose file as well as the imagename (using the new nexus repo).
+Copy the [](exercise6/docker-compose.yml) file to the host
+```
+scp exercise6/docker-compose.yml root@<droplet-ip>:/var
+```
+On the remote host export the respective env variables (MYSQL_USER, etc.).
+login to docker host.
+Then run
+```
+docker-compose -f /var/docker-compose.yml up -d
+```
+
+## Exercise 8 - Open ports
+has already been done via api creation (and adding the droplet to the respective firewall)
