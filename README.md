@@ -43,19 +43,23 @@ docker-compose up -d
 
 ## Exercise 4 - build docker image for java app
 see [Dockerfile](Dockerfile)
+
 ```
 docker build -t my-java-app:1.0.0
-``
+```
 
 ## Exercise 5 - push image to (insecure) nexus on droplet
 given a nexus running within a container on a digital ocean droplet.
-* add the nexus to the /etc/docker/daemon.json file:
+add the nexus to the /etc/docker/daemon.json file:
+
 ```
 {
   "insecure-registries" : ["http://<droplet-ip>:<nexus-port>"]
 }
 ```
+
 Then login to nexus and push the image:
+
 ```
 docker login http://<droplet-ip>:<nexus-port>
 docker tag my-java-app:1.0.0 http://<droplet-ip>:<nexus-port>/my-java-app:1.0.0
